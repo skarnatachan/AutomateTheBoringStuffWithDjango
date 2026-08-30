@@ -30,15 +30,6 @@ class Command(BaseCommand):
         timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         # Define the CSV file name/path
         file_path = f"exported_{model_name}_data_{timestamp}.csv"
-        print("model : ",model)
-        print("type(model) : ", type(model))
-        print("model._meta.fields : ", model._meta.fields)
-        print("type(model._meta.fields) : ", type(model._meta.fields))
-        for field in model._meta.fields:
-            print("field : ",field)
-            print("type(field) : ", type(field))
-            print("field.name : ", field.name)
-            print("type(field.name) : ", type(field.name))
         with open(file_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
 
@@ -48,8 +39,6 @@ class Command(BaseCommand):
 
             # write data rows
             for dt in data:
-                print("dt : ", dt)
-                print("type(dt) : ", type(dt))
                 writer.writerow([getattr(dt, field.name) for field in  model._meta.fields])
         self.stdout.write(self.style.SUCCESS("Successfully exported data to CSV file"))
 
