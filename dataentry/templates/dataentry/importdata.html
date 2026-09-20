@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Automate The Boring Stuff With Django{% endblock title %}
+{% block content %}
+    <div class="max-w-4xl mx-auto bg-gray-100 rounded">
+        <h2 class="text-center text-2xl font-bold mt-12 p-8">Welcome to Import Data</h2>
+        <form class="max-w-lg mx-auto space-y-6" action="{% url 'import_data' %}" method="post"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="file_path" class="block mb-2.5 text-base font-medium text-heading">Upload file</label>
+            <input class="cursor-pointer bg-neutral-secondary-medium border focus:border-b-brand placeholder:text-body text-sm rounded-base focus:ring-brand block w-full shadow-xs"
+                   id="file_path" type="file" name="file_path" required>
+            <label for="model_name" class="block mb-2.5 text-base font-medium text-heading">Select Database
+                Table</label>
+            <select id="model_name" name="model_name" required
+                    class="block w-full px-3 py-2.5 bg-neutral-secondary-medium border focus:border-b-brand placeholder:text-body text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs">
+                <option value="" selected disabled>Choose database table</option>
+                {% for model in custom_models %}
+                    <option value="{{ model }}">{{ model }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit"
+                    class="text-white mb-12 bg-brand box-border border border-transparent hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-base px-4 py-2.5 focus:outline-none cursor-pointer">
+                Import Data
+            </button>
+        </form>
+    </div>
+{% endblock content %}

@@ -1,6 +1,8 @@
 import csv
 from django.apps import apps
 from django.core.management.base import BaseCommand, CommandError
+from django.db import DataError
+
 
 # Proposed command - python manage.py importdata file_path model_name
 
@@ -25,8 +27,21 @@ class Command(BaseCommand):
         if not model:
             raise CommandError(f"Model {model_name} not found in any app!")
 
+        # Compare csv header with model's field names
+        # get all the field names of the model that we found
+        model_fields = [field.name for field in model._meta.fields if field.name != "id"]
+        print("model_fields : ", model_fields)
+
         with open(file_path, 'r') as file:
             reader = csv.DictReader(file)
+            print("reader : ", reader)
+            csv_header = reader.fieldnames
+            print("csv_header : ", csv_header)
+
+            # Compare CSV header with model's field names
+            if csv_header != model_fields:
+                raise DataError(f"CSV file does not match with the {model_name} table fields.")
             for row in reader:
+                print("row : ", row)
                 model.objects.create(**row)
         self.stdout.write(self.style.SUCCESS("Data inserted successfully"))
